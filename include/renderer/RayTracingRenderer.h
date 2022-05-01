@@ -10,7 +10,7 @@ public:
     static const int DEFAULT_TRACING_DEPTH;
     static const int DEFAULT_SAMPLE_NUMBER;
     RayTracingRenderer (
-        const Scene& scene,
+        Scene* scene,
         int depth = DEFAULT_TRACING_DEPTH,
         int number = DEFAULT_SAMPLE_NUMBER,
         int width = WINDOW_DEFAULT_WIDTH,
@@ -18,18 +18,12 @@ public:
     );
 
     /**
-     * @brief trace the spectrum of one pixel
-     * @param pixel position of pixel in fragment coordinate
-     * @return Spectrum spectrum of that pixel
-     */
-    Spectrum tracePixel(const glm::vec2& pixel);
-
-    /**
      * @brief render the window.
      */
-    void render();
+    void render() override;
 private:
     int tracingDepth;
     int sampleNumber;
-    Spectrum _trace(const Ray&, int depth);
+    Spectrum traceIndirect(const Ray& ray, int depth) const;
+    Spectrum traceDirect(const Tracable::HitResult& result, const glm::quat& q, const glm::vec3& wo) const;
 };

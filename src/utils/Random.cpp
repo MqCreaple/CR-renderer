@@ -28,6 +28,5 @@ glm::vec3 Random::vecOnHemisphere() {
 void Random::updRnd() {
     rnd ^= rnd << 15;
     rnd += 0x1b4043d1;
-    rnd ^= rnd >> 12;
     rnd ^= (uint32_t) time(NULL);
 }

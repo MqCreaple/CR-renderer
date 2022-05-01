@@ -1,21 +1,23 @@
 #pragma once
 
 #include "components/ThreeDObject.h"
-#include "components/TriangleMeshObject.h"
+#include "components/ObjectList.h"
 #include "components/Camera.h"
+#include "light/PointLight.h"
 #include <vector>
-#include <memory>
+#include <functional>
 
 class Scene {
 public:
     Scene();
     Scene(const Camera& camera);
-    void addObject(const std::shared_ptr<TracableObject>& object);
 
-    Camera getPrimaryCamera() const;
-    std::shared_ptr<TracableObject> getObject(int i) const;
+    Camera& getPrimaryCamera();
+    ObjectList* getObjects() const;
+    std::vector<PointLight*>& getLights();
     ~Scene();
 private:
     Camera primaryCam;
-    std::vector<std::shared_ptr<TracableObject>> objects;
+    ObjectList* list;
+    std::vector<PointLight*> lights;
 };

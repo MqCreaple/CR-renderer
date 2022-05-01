@@ -2,10 +2,12 @@
 
 // class: "TriangleSurface" //
 
-TriangleSurface::TriangleSurface(const std::vector<glm::vec3>& vertices, const glm::ivec3& indices, const Transformation& transformation)
-    : TracableObject(transformation),
-    vertices(std::make_shared<const std::vector<glm::vec3>>(vertices)),
-    v0(indices[0]), v1(indices[1]), v2(indices[2]) {}
+TriangleSurface::TriangleSurface (
+    const std::vector<glm::vec3>& vertices,
+    const glm::ivec3& indices,
+    const BSDF* bsdf,
+    const Transformation& transformation
+): VisibleObject(bsdf, transformation), vertices(&vertices), v0(indices[0]), v1(indices[1]), v2(indices[2]) {}
 
 glm::vec3 TriangleSurface::normal() const {
     return transformation.getRotation() * localNormal();
@@ -19,7 +21,7 @@ glm::vec3 TriangleSurface::localNormal() const {
     ));
 }
 
-TracableObject::HitResult TriangleSurface::intersect(const Ray& ray, float tMin, float tMax) const {
+Tracable::HitResult TriangleSurface::intersect(const Ray& ray, float tMin, float tMax) const {
     // triangle-ray intersection algorithm
     // based on "Fast, Minimum Storage Ray-Triangle Intersection" https://doi.org/10.1080/10867651.1997.10487468
     Ray rayLocal = Ray(toLocalCoord(ray.position()), ray.direction() * transformation.getRotation());
@@ -33,19 +35,19 @@ TracableObject::HitResult TriangleSurface::intersect(const Ray& ray, float tMin,
     if(u < 0 || v < 0 || u + v > 1 || t < tMin || t > tMax) {
         return HitResult();
     }
-    return HitResult(ray.at(t), normal(), t);
+    return HitResult(ray.at(t), normal(), t, this->material);
 }
 
 // class: "TriangleMeshObject" //
 
-TriangleMeshObject::TriangleMeshObject(std::vector<glm::vec3>& v, std::vector<glm::i32vec3>& s, const Transformation& t)
-    : TracableObject(t), vertices(v), surfaces(s), box(v, t) {}
+TriangleMeshObject::TriangleMeshObject(std::vector<glm::vec3>& v, std::vector<glm::i32vec3>& s, const BSDF* bsdf, const Transformation& t)
+    : VisibleObject(bsdf, t), vertices(v), surfaces(s), box(v, t) {}
 
 TriangleSurface TriangleMeshObject::getSurface(int index) const {
-    return TriangleSurface(vertices, surfaces[index], transformation);
+    return TriangleSurface(vertices, surfaces[index], material, transformation);
 }
 
-TracableObject::HitResult TriangleMeshObject::intersect(const Ray& ray, float tMin, float tMax) const {
+Tracable::HitResult TriangleMeshObject::intersect(const Ray& ray, float tMin, float tMax) const {
     if(!box.intersect(ray, tMin, tMax)) {
         return HitResult();
     }

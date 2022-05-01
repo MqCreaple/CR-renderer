@@ -1,12 +1,15 @@
 #pragma once
 
 #include "utils/Spectrum.h"
+#include "utils/Random.h"
 
 /**
  * @brief interface for BSDF materials.
  */
 class BSDF {
 public:
+    static const BSDF* DEFAULT;
+
     /**
      * @brief The value of reflection function with given incoming and outgoing ray direction.
      * surface's normal vector is [0, 0, 1].

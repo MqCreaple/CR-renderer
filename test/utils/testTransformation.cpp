@@ -25,11 +25,23 @@ int main() {
     CHECK_EPSILON_EQU(tc.transform(v), vec3(3, 8, -1), 2e-7f);
     CHECK_EPSILON_EQU(tc.invTransform(v), vec3(1, 4, 3), 2e-7f);
 
-    // test the inverse transformation
-    const size_t N = 1000;
+    // test inverse transformation
+    const size_t N = 2000;
     for(int i = 0; i < N; i++) {
         v = Random::unitVec() * Random::uniform();
         CHECK_EPSILON_EQU(v, tc.transform(tc.inv().transform(v)), 2e-7f);
+    }
+
+    // test transformation composition
+    Transformation first = Transformation(Random::unitVec(), Random::uniform(), Random::unitVec());
+    Transformation second = Transformation(Random::unitVec(), Random::uniform(), Random::unitVec());
+    for(int i = 0; i < N; i++) {
+        v = Random::unitVec() * Random::uniform();
+        CHECK_EPSILON_EQU(
+            Transformation::compose(first, second).transform(v),
+            second.transform(first.transform(v)),
+            2e-7f
+        )
     }
     return 0;
 }

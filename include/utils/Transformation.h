@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cmath>
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
 
@@ -8,6 +9,7 @@
  * Every congruence transformation is represented by the combination of rotation and translation.
  */
 class Transformation {
+    friend class ThreeDObject;
 public:
     static const Transformation DEFAULT;
     /**
@@ -82,6 +84,15 @@ public:
      * @return Transformation transformation
      */
     static Transformation translation(const glm::vec3& tr);
+
+    /**
+     * @brief compose two transformation.
+     * Given two transformations, returns the equivalent transformation of performing tansformations in order.
+     * @param first first transformation to perform
+     * @param second second transformation to perform
+     * @return Transformation equivalent composed transformation
+     */
+    static Transformation compose(const Transformation& first, const Transformation& second);
 private:
     glm::quat rotate;
     glm::vec3 translate;

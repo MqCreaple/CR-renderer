@@ -55,3 +55,7 @@ Transformation Transformation::rotation(const glm::vec3& n, float angle) {
 Transformation Transformation::translation(const glm::vec3& tr) {
     return Transformation(glm::quat(1, 0, 0, 0), tr);
 }
+
+Transformation Transformation::compose(const Transformation& first, const Transformation& second) {
+    return Transformation(second.rotate * first.rotate, second.rotate * first.translate + second.translate);
+}

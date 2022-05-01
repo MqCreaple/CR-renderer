@@ -1,11 +1,15 @@
 #pragma once
 
-#include "components/TracableObject.h"
+#include "components/Tracable.h"
 #include <vector>
-#include <memory>
 
-class ObjectList: public TracableObject {
+class ObjectList: public Tracable {
 public:
+    ObjectList();
+    ObjectList(const std::vector<Tracable*>& list);
+    void add(Tracable& obj);
+
+    HitResult intersect(const Ray& ray, float tMin = DEFAULT_T_MIN, float tMax = DEFAULT_T_MAX) const override;
 private:
-    std::vector<std::shared_ptr<TracableObject>> objects;
+    std::vector<Tracable*> objects;
 };

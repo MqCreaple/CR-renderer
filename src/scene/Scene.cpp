@@ -1,15 +1,20 @@
 #include "scene/Scene.h"
 
-Scene::Scene(): primaryCam(), objects() {}
-Scene::Scene(const Camera& camera): primaryCam(camera), objects() {}
+Scene::Scene(): primaryCam(), list(new ObjectList) {}
+Scene::Scene(const Camera& camera): primaryCam(camera), list(new ObjectList) {}
 
-void Scene::addObject(const std::shared_ptr<TracableObject>& obj) {
-    objects.push_back(obj);
-}
-
-Camera Scene::getPrimaryCamera() const {
+Camera& Scene::getPrimaryCamera() {
     return primaryCam;
 }
-std::shared_ptr<TracableObject> Scene::getObject(int i) const {
-    return objects[i];
+
+ObjectList* Scene::getObjects() const {
+    return list;
+}
+
+std::vector<PointLight*>& Scene::getLights() {
+    return lights;
+}
+
+Scene::~Scene() {
+    delete list;
 }

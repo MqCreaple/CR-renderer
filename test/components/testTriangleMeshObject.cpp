@@ -16,7 +16,7 @@ int main() {
     CHECK_EPSILON_EQU(o1.getSurface(0).normal(), vec3(0, 0, 1), 2e-7f);
     // ray
     Ray ray(vec3(0, 0, 1), vec3(1, 2, -4));
-    TracableObject::HitResult result = o1.intersect(ray);
+    Tracable::HitResult result = o1.intersect(ray);
     CHECK(result.valid)
     CHECK_EPSILON_EQU(result.intersection, vec3(0.25, 0.5, 0), 2e-7f);
     CHECK_EPSILON_EQU(result.normal, vec3(0, 0, 1), 2e-7f);
@@ -41,7 +41,7 @@ int main() {
         ivec3(0, 2, 3),
         ivec3(1, 3, 2)
     });
-    TriangleMeshObject o2(v2, s2, Transformation(vec3(1, 0, 0), M_PI_2, vec3(1, 2, 3)));
+    TriangleMeshObject o2(v2, s2, BSDF::DEFAULT, Transformation(vec3(1, 0, 0), M_PI_2, vec3(1, 2, 3)));
     CHECK_EPSILON_EQU(o2.getSurface(0).localNormal(), normalize(vec3(1, 1, 1)), 2e-7f);
     CHECK_EPSILON_EQU(o2.getSurface(1).localNormal(), normalize(vec3(1, 1, -1)), 2e-7f);
     CHECK_EPSILON_EQU(o2.getSurface(2).localNormal(), vec3(0, -1, 0), 2e-7f);

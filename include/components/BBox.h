@@ -1,7 +1,7 @@
 #pragma once
 
 #include "components/ThreeDObject.h"
-#include "components/TracableObject.h"
+#include "utils/Ray.h"
 #include <vector>
 
 /**

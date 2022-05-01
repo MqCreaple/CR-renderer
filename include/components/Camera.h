@@ -8,8 +8,8 @@
  */
 class Camera: public ThreeDObject {
 public:
-    Camera();
-    Camera(float focus);
+    Camera(float focus = DEFAULT_FOCUS);
+    Camera(const glm::vec3& pos, const glm::vec3& dirFacing, float focus = DEFAULT_FOCUS);
 
     /**
      * @brief Get the focus value (distance from the screen to the pinhole)
@@ -26,4 +26,6 @@ public:
     static const float DEFAULT_FOCUS;
 private:
     float focus;
+
+    static glm::quat facing(const glm::vec3& vec);
 };
