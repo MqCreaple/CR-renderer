@@ -10,6 +10,7 @@ endfunction() # createTest
 
 createTest(utils testRay)
 createTest(utils testTransformation)
+createTest(utils testRandom)
 createTest(components testSphereObject)
 createTest(components testTriangleMeshObject)
 createTest(components testSurfaceObject)

@@ -1,6 +1,11 @@
 #include "utils/Random.h"
 
-uint32_t Random::rnd = 0x4b1293c8U;
+uint32_t Random::rnd = 0x4b1293c8U + time(NULL);
+
+int Random::randInt(int iMin, int iMax) {
+    updRnd();
+    return rnd % (iMax - iMin) + iMin;
+}
 
 float Random::uniform() {
     updRnd();

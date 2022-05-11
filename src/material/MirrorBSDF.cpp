@@ -2,6 +2,10 @@
 
 MirrorBSDF::MirrorBSDF(float refl): refl(refl) {}
 
+const BSDF::BSDFProperty MirrorBSDF::property() const {
+    return BSDF_PROPERTY_DISCRETE;
+}
+
 Spectrum MirrorBSDF::f(const glm::vec3& wi, const glm::vec3& wo) const {
     /*
     // glm::vec3 v = wi + wo;

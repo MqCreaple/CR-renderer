@@ -13,6 +13,7 @@
 #include "scene/Scene.h"
 
 #include "light/PointLight.h"
+#include "light/AmbientLight.h"
 
 #include "material/BSDF.h"
 #include "material/DiffuseBSDF.h"
@@ -20,6 +21,9 @@
 
 #include "renderer/Renderer.h"
 #include "renderer/RayTracingRenderer.h"
+
+#include "texture/TextureMap.h"
+#include "texture/SphericalTextureMap.h"
 
 #include "utils/Ray.h"
 #include "utils/Transformation.h"

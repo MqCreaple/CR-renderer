@@ -63,8 +63,8 @@ public:
      */
     TriangleMeshObject (
         const std::string& file,
-        const Transformation& t = Transformation::DEFAULT,
-        const BSDF* bsdf = BSDF::DEFAULT
+        const BSDF* bsdf = BSDF::DEFAULT,
+        const Transformation& t = Transformation::DEFAULT
     );
 
     /**

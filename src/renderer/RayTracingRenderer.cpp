@@ -30,10 +30,14 @@ void RayTracingRenderer::render() {
 }
 
 Spectrum RayTracingRenderer::traceIndirect(const Ray& ray, int depth) const {
+    // TODO (trace light whose depth <= tracingDepth in the function)
     Tracable::HitResult result = scene->getObjects()->intersect(ray);
     if(!result.valid) {
-        // TODO (Environment Lighting)
-        return Spectrum(0);
+        if(scene->getAmbientLight() != nullptr) {
+            return scene->getAmbientLight()->map(ray.direction());
+        } else {
+            return Spectrum(0);
+        }
     }
 
     glm::vec3 axis = (result.normal.z == -1)? glm::vec3(1, 0, 0): glm::normalize(result.normal + glm::vec3(0, 0, 1));
@@ -41,8 +45,10 @@ Spectrum RayTracingRenderer::traceIndirect(const Ray& ray, int depth) const {
 
     glm::vec3 oDir = -(q * ray.direction()); // local
 
-    if(depth <= 1) {
+    if(depth <= 1 && result.material->property() == BSDF::BSDF_PROPERTY_CONTINUOUS) {
         return traceDirect(result, q, oDir);
+    } else if(depth <= 0) {
+        return Spectrum(0);
     }
     glm::vec3 iDir;  // local
     Spectrum s = result.material->sample(oDir, iDir);
@@ -55,6 +61,8 @@ Spectrum RayTracingRenderer::traceDirect(const Tracable::HitResult& result, cons
     glm::vec3 p = result.intersection;
     glm::vec3 n = result.normal;
     const BSDF* material = result.material;
+
+    // trace all point lights
     for(PointLight* light : scene->getLights()) {
         glm::vec3 dir = light->getCenter() - p; // world
         if(glm::dot(n, dir) <= 0) {
@@ -67,6 +75,21 @@ Spectrum RayTracingRenderer::traceDirect(const Tracable::HitResult& result, cons
         if(!r.valid || r.t >= d) {
             // if no object blocks the light //
             ans += material->f(dirLocal, wo) * light->getIllumination() * glm::dot(n, dir) / (d * d);
+        }
+    }
+
+    AmbientLight* ambient = scene->getAmbientLight();
+    if(ambient != nullptr) {
+        glm::vec3 dir;
+        Spectrum s = ambient->sample(dir);
+        float proj = glm::dot(dir, n);
+        if(proj < 0) {
+            proj = 0;
+        }
+        Ray ray(result.intersection, dir);
+        Tracable::HitResult result = scene->getObjects()->intersect(ray);
+        if(!result.valid) {
+            ans += ambient->getSum() * proj;
         }
     }
     return ans;

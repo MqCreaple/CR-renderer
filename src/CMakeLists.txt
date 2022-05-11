@@ -9,10 +9,13 @@ add_library(libCRrenderer
     components/BBox.cpp
     components/Camera.cpp
     light/PointLight.cpp
+    light/AmbientLight.cpp
     material/BSDF.cpp
     material/MirrorBSDF.cpp
     material/DiffuseBSDF.cpp
     scene/Scene.cpp
+    # texture/TextureMap.cpp
+    # texture/SphericalTextureMap.cpp
     renderer/Renderer.cpp
     renderer/RayTracingRenderer.cpp
     utils/Ray.cpp

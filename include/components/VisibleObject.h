@@ -9,6 +9,7 @@ public:
     VisibleObject(const BSDF* bsdf = BSDF::DEFAULT, const Transformation& trans = Transformation::DEFAULT);
 
     const BSDF* getMaterial() const;
+    bool emitLight() const;
 protected:
     const BSDF* material;
 };
