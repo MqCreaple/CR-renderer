@@ -87,8 +87,8 @@ Spectrum RayTracingRenderer::traceDirect(const Tracable::HitResult& result, cons
             proj = 0;
         }
         Ray ray(result.intersection, dir);
-        Tracable::HitResult result = scene->getObjects()->intersect(ray);
-        if(!result.valid) {
+        Tracable::HitResult r = scene->getObjects()->intersect(ray);
+        if(!r.valid) {
             ans += ambient->getSum() * proj;
         }
     }

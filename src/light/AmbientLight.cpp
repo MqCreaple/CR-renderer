@@ -27,6 +27,7 @@ Spectrum AmbientLight::map(const glm::vec3& local) const {
 
 Spectrum AmbientLight::sample(glm::vec3& dir) const {
     int index;
+    // TODO (repeated calculation of prefix sum)
     Spectrum val = Random::randSelect(width * height, (Spectrum*) colorMap, (Spectrum*) colorMap, index);
     int w = index / height;
     int h = index % height;

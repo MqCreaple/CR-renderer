@@ -16,13 +16,15 @@ int main() {
     SphereObject sp2(2, vec3(2, 2, 2), &mirrorBSDF);
     Camera cam(vec3(0, -7, 2), vec3(0, 7, -2));
     AmbientLight ambient(20, 10);
-    ambient.set(0, 2, Spectrum(0.95));
+    ambient.set(18, 2, Spectrum(0.95));
+    PointLight point(0.5, vec3(0, 0, 1));
     Scene scene(cam, &ambient);
     scene.getObjects()->add(s1);
     scene.getObjects()->add(s2);
     scene.getObjects()->add(s3);
     scene.getObjects()->add(sp1);
     scene.getObjects()->add(sp2);
+    // scene.getLights().push_back(&point);
     RayTracingRenderer renderer(&scene);
     steady_clock::time_point t1 = steady_clock::now();
     renderer.render();

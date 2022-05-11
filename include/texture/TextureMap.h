@@ -1,5 +1,6 @@
 #pragma once
 
+#include <iostream>
 #include <cmath>
 #include <glm/glm.hpp>
 
@@ -108,5 +109,5 @@ T TextureMap<T>::bilinInterp(float i, float j) const {
     if(jLow < 0) jLow = height - 1;
     if(jHigh >= width) jHigh = 0;
     return b * d * get(iLow, jLow) + a * d * get(iHigh, jLow)
-        + b * c * get(iLow, jHigh) + a * c * get(iLow, jLow);
+        + b * c * get(iLow, jHigh) + a * c * get(iHigh, jHigh);
 }
