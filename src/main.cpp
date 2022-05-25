@@ -14,7 +14,7 @@ int main() {
     SurfaceObject s3(10, 6, BSDF::DEFAULT, Transformation(quat(M_SQRT1_2, M_SQRT1_2, 0, 0), vec3(0, 5, 3)));
     SphereObject sp1(2, vec3(-2, -2, 2));
     SphereObject sp2(2, vec3(2, 2, 2), &mirrorBSDF);
-    Camera cam(vec3(0, -7, 2), vec3(0, 7, -2));
+    Camera cam(vec3(0, -7, 4), vec3(0, 7, -4));
     AmbientLight ambient(20, 10);
     ambient.set(18, 2, Spectrum(0.95));
     PointLight point(0.5, vec3(0, 0, 1));

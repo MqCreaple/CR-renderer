@@ -15,8 +15,13 @@ size_t TextureMap<T>::getHeight() const {
 }
 
 template<typename T>
-T& TextureMap<T>::operator()(size_t i, size_t j) {
-    return get(i, j);
+T TextureMap<T>::operator()(float u, float v) const {
+    return bilinInterp(u, v);
+}
+
+template<typename T>
+void TextureMap<T>::set(int i, int j, T val) {
+    colorMap[i * height + j] = val;
 }
 
 template<typename T>
@@ -27,12 +32,7 @@ TextureMap<T>::~TextureMap() {
 // private methods //
 
 template<typename T>
-T& TextureMap<T>::get(size_t i, size_t j) {
-    return colorMap[i * height + j];
-}
-
-template<typename T>
-T TextureMap<T>::getConst(size_t i, size_t j) const {
+T TextureMap<T>::get(size_t i, size_t j) const {
     return colorMap[i * height + j];
 }
 
@@ -46,6 +46,6 @@ T TextureMap<T>::bilinInterp(float i, float j) const {
     if(iHigh >= width) iHigh = 0;
     if(jLow < 0) jLow = height - 1;
     if(jHigh >= width) jHigh = 0;
-    return b * d * getConst(iLow, jLow) + a * d * getConst(iHigh, jLow)
-        + b * c * getConst(iLow, jHigh) + a * c * getConst(iLow, jLow);
+    return b * d * get(iLow, jLow) + a * d * get(iHigh, jLow)
+        + b * c * get(iLow, jHigh) + a * c * get(iHigh, jHigh);
 }

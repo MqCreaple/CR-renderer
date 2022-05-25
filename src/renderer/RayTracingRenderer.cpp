@@ -1,6 +1,6 @@
 #include "renderer/RayTracingRenderer.h"
 
-const int RayTracingRenderer::DEFAULT_SAMPLE_NUMBER = 600;
+const int RayTracingRenderer::DEFAULT_SAMPLE_NUMBER = 700;
 const int RayTracingRenderer::DEFAULT_TRACING_DEPTH = 4;
 
 RayTracingRenderer::RayTracingRenderer(Scene* scene, int depth, int number, int width, int height)
@@ -10,27 +10,25 @@ void RayTracingRenderer::render() {
     Camera camera = scene->getPrimaryCamera();
     for(int i = 0; i < windowWidth; i++) {
         for(int j = 0; j < windowHeight; j++) {
+            // loop through every pixel
             std::pair<glm::vec2, glm::vec2> pos = pixel(i, j);
             Color pixelColor(0);
-            for(int depth = 1; depth <= tracingDepth; depth++) {
-                for(int k = 0; k < sampleNumber; k++) {
-                    glm::vec2 samplePos (
-                        Random::uniform(pos.first.x, pos.second.x),
-                        Random::uniform(pos.first.y, pos.second.y)
-                    );                                                   // choose a random sample
-                    Ray ray = camera.getRay(samplePos);                  // get the outward ray
-                    pixelColor += Color(traceIndirect(ray, depth));      // trace ray color
-                }
+            for(int k = 0; k < sampleNumber; k++) {                    // sample multiple times
+                glm::vec2 samplePos (
+                    Random::uniform(pos.first.x, pos.second.x),
+                    Random::uniform(pos.first.y, pos.second.y)
+                );                                                     // choose a random point inside the pixel
+                Ray ray = camera.getRay(samplePos);                    // get the outward ray
+                pixelColor += Color(traceIndirect(ray, tracingDepth)); // trace ray color
             }
-            setPixel(i, j, pixelColor / (sampleNumber * 1.0f));
+            setPixel(i, j, pixelColor / (sampleNumber * 1.2f));
         }
-        update();  //! REMOVE THIS LINE IN FINAL RELEASE
+        //// supdate();  //! REMOVE THIS LINE IN FINAL RELEASE
     }
     std::cout << "[info] Render completed!" << std::endl;
 }
 
 Spectrum RayTracingRenderer::traceIndirect(const Ray& ray, int depth) const {
-    // TODO (trace light whose depth <= tracingDepth in the function)
     Tracable::HitResult result = scene->getObjects()->intersect(ray);
     if(!result.valid) {
         if(scene->getAmbientLight() != nullptr) {
@@ -45,15 +43,17 @@ Spectrum RayTracingRenderer::traceIndirect(const Ray& ray, int depth) const {
 
     glm::vec3 oDir = -(q * ray.direction()); // local
 
+    float direct = traceDirect(result, q, oDir);
     if(depth <= 1 && result.material->property() == BSDF::BSDF_PROPERTY_CONTINUOUS) {
-        return traceDirect(result, q, oDir);
+        return direct;
     } else if(depth <= 0) {
         return Spectrum(0);
     }
     glm::vec3 iDir;  // local
     Spectrum s = result.material->sample(oDir, iDir);
     iDir = iDir * q; // world
-    return s * traceIndirect(Ray(result.intersection, iDir), depth - 1) * glm::dot(iDir, result.normal);
+    float indirect =  s * traceIndirect(Ray(result.intersection, iDir), depth - 1) * glm::dot(iDir, result.normal);  // Lo(wo) = Li(wi) * f(wi, wo) * cos(theta)
+    return direct + indirect;                                                                                        // trace both direct and indirect light and return their sum
 }
 
 Spectrum RayTracingRenderer::traceDirect(const Tracable::HitResult& result, const glm::quat& q, const glm::vec3& wo) const {
