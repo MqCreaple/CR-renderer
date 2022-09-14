@@ -3,8 +3,8 @@
 const int RayTracingRenderer::DEFAULT_SAMPLE_NUMBER = 700;
 const int RayTracingRenderer::DEFAULT_TRACING_DEPTH = 4;
 
-RayTracingRenderer::RayTracingRenderer(Scene* scene, int depth, int number, int width, int height)
-    : Renderer(scene, width, height), tracingDepth(depth), sampleNumber(number) {}
+RayTracingRenderer::RayTracingRenderer(Scene* scene, float fogDensity, int depth, int number, int width, int height)
+    : Renderer(scene, width, height), fogDensity(fogDensity), tracingDepth(depth), sampleNumber(number) {}
 
 void RayTracingRenderer::render() {
     Camera camera = scene->getPrimaryCamera();
@@ -21,9 +21,9 @@ void RayTracingRenderer::render() {
                 Ray ray = camera.getRay(samplePos);                    // get the outward ray
                 pixelColor += Color(traceIndirect(ray, tracingDepth)); // trace ray color
             }
-            setPixel(i, j, pixelColor / (sampleNumber * 1.2f));
+            setPixel(i, j, pixelColor / (sampleNumber * 1.0f));
         }
-        //// supdate();  //! REMOVE THIS LINE IN FINAL RELEASE
+        update();  //! REMOVE THIS LINE IN FINAL RELEASE
     }
     std::cout << "[info] Render completed!" << std::endl;
 }
@@ -33,8 +33,15 @@ Spectrum RayTracingRenderer::traceIndirect(const Ray& ray, int depth) const {
     if(!result.valid) {
         if(scene->getAmbientLight() != nullptr) {
             return scene->getAmbientLight()->map(ray.direction());
-        } else {
-            return Spectrum(0);
+        }
+        return Spectrum(0);
+    }
+    // fog reflection
+    if(fogDensity > 0) {
+        float rand = Random::uniform();
+        float distance = log(1 - rand) / log(1 - fogDensity);
+        if(distance < result.t) {
+            return traceIndirect(Ray(ray.at(distance), Random::unitVec()), depth - 1);
         }
     }
 
@@ -78,6 +85,7 @@ Spectrum RayTracingRenderer::traceDirect(const Tracable::HitResult& result, cons
         }
     }
 
+    // trace ambient light
     AmbientLight* ambient = scene->getAmbientLight();
     if(ambient != nullptr) {
         glm::vec3 dir;
@@ -89,7 +97,7 @@ Spectrum RayTracingRenderer::traceDirect(const Tracable::HitResult& result, cons
         Ray ray(result.intersection, dir);
         Tracable::HitResult r = scene->getObjects()->intersect(ray);
         if(!r.valid) {
-            ans += ambient->getSum() * proj;
+            ans += s * proj;
         }
     }
     return ans;

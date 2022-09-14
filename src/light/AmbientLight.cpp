@@ -4,7 +4,7 @@ AmbientLight::AmbientLight(size_t width, size_t height): SphericalTextureMap(wid
 
 void AmbientLight::set(int i, int j, Spectrum val) {
     SphericalTextureMap::set(i, j, val);
-    this->sum += val;
+    this->sum += val;   // TODO (incorrect sum)
 }
 
 Spectrum AmbientLight::getSum() const {

@@ -9,12 +9,13 @@ using namespace std::chrono;
 
 int main() {
     MirrorBSDF mirrorBSDF(1);
-    SurfaceObject s1(10, 10);
-    SurfaceObject s2(6, 10, BSDF::DEFAULT, Transformation(quat(M_SQRT1_2, 0, M_SQRT1_2, 0), vec3(-5, 0, 3)));
-    SurfaceObject s3(10, 6, BSDF::DEFAULT, Transformation(quat(M_SQRT1_2, M_SQRT1_2, 0, 0), vec3(0, 5, 3)));
+    SurfaceObject s1(10, 20);
+    SurfaceObject s2(6, 20, BSDF::DEFAULT, Transformation(quat(M_SQRT1_2, 0, M_SQRT1_2, 0), vec3(-5, 0, 3)));
+    SurfaceObject s3(10, 6, BSDF::DEFAULT, Transformation(quat(M_SQRT1_2, M_SQRT1_2, 0, 0), vec3(0, 10, 3)));
     SphereObject sp1(2, vec3(-2, -2, 2));
     SphereObject sp2(2, vec3(2, 2, 2), &mirrorBSDF);
-    Camera cam(vec3(0, -7, 4), vec3(0, 7, -4));
+    SphereObject sp3(2, vec3(-2, 6, 2), &mirrorBSDF);
+    Camera cam(vec3(0, -7, 6), vec3(0, 7, -6));
     AmbientLight ambient(20, 10);
     ambient.set(18, 2, Spectrum(0.95));
     PointLight point(0.5, vec3(0, 0, 1));
@@ -24,8 +25,9 @@ int main() {
     scene.getObjects()->add(s3);
     scene.getObjects()->add(sp1);
     scene.getObjects()->add(sp2);
+    scene.getObjects()->add(sp3);
     // scene.getLights().push_back(&point);
-    RayTracingRenderer renderer(&scene);
+    RayTracingRenderer renderer(&scene, 0.06);
     steady_clock::time_point t1 = steady_clock::now();
     renderer.render();
     steady_clock::time_point t2 = steady_clock::now();

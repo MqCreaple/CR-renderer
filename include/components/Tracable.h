@@ -43,7 +43,8 @@ public:
     };
 
     /**
-     * @brief get the intersection with a ray
+     * @brief Get the intersection with a ray.
+     * If the object is enclosed, the normal vector should always be pointing toward outside.
      * @param ray incoming ray
      * @return TraceResult trace result
      */

@@ -1,6 +1,6 @@
 #include "components/Tracable.h"
 
-const float Tracable::DEFAULT_T_MIN = 2e-7f;
+const float Tracable::DEFAULT_T_MIN = 2e-6f;
 const float Tracable::DEFAULT_T_MAX = INFINITY;
 
 Tracable::HitResult::HitResult(): valid(false), intersection(), normal(), t() {}

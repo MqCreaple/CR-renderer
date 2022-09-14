@@ -26,7 +26,7 @@ public:
     static T randSelect(size_t n, const T* vals, float* weights, int& index);
     
     /**
-     * @brief generate uniform random number in [0, 1]
+     * @brief generate uniform random number in [0, 1)
      * @return float random number
      */
     static float uniform();
@@ -51,11 +51,6 @@ public:
      */
     static glm::vec3 vecOnHemisphere();
 private:
-    static uint32_t rnd;
-    /**
-     * @brief update random number
-     */
-    static void updRnd();
 };
 
 template<typename T>
