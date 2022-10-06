@@ -17,16 +17,14 @@ Tracable::HitResult SphereObject::intersect(const Ray& ray, float tMin, float tM
     if(delta < 0) {
         return HitResult();
     }
-    bool in = false;
     float t = -hb - sqrt(delta);
     if(t < tMin) {
-        in = true;
         t = -hb + sqrt(delta);
     }
     if(t < tMin || t > tMax) {
         return HitResult();
     }
-    glm::vec3 i = ray.at(t);                    // intersection
-    glm::vec3 n = (i - getCenter()) / radius;   // normal vector
+    glm::vec3 i = ray.at(t);                         // intersection
+    glm::vec3 n = glm::normalize(i - getCenter());   // normal vector
     return HitResult(i, n, t, this->material);
 }

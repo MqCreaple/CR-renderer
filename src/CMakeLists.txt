@@ -12,6 +12,7 @@ add_library(libCRrenderer
     light/AmbientLight.cpp
     material/BSDF.cpp
     material/MirrorBSDF.cpp
+    material/GlassBSDF.cpp
     material/DiffuseBSDF.cpp
     scene/Scene.cpp
     # texture/TextureMap.cpp

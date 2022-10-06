@@ -18,6 +18,7 @@
 #include "material/BSDF.h"
 #include "material/DiffuseBSDF.h"
 #include "material/MirrorBSDF.h"
+#include "material/GlassBSDF.h"
 
 #include "renderer/Renderer.h"
 #include "renderer/RayTracingRenderer.h"

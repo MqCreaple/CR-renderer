@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cmath>
 #include "utils/Spectrum.h"
 #include "utils/Random.h"
 

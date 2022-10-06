@@ -18,6 +18,7 @@ public:
      * * valid: whether the intersection exists or not
      * * intersection: intersection (if exists)
      * * normal: normal vector of the surface (if exists)
+     *     ! If the object is enclosed, the normal vector should be pointing toward outside.
      * * t: distance from the origin of ray to the intersection (if exists)
      * * material: material of the surface (if exists)
      */
@@ -44,7 +45,7 @@ public:
 
     /**
      * @brief Get the intersection with a ray.
-     * If the object is enclosed, the normal vector should always be pointing toward outside.
+     * If the object is enclosed, the normal vector should be pointing toward outside.
      * @param ray incoming ray
      * @return TraceResult trace result
      */
